@@ -1,0 +1,435 @@
+<!-- Header -->
+<div class="header">
+    <div class="header-left">
+        <img src="logo.png" alt="Logo" class="logo" />
+        <div>
+            <h1>Painel da Cozinha</h1>
+            <p>Gerencie os pedidos em preparo</p>
+        </div>
+    </div>
+    <button type="button" class="btn-sair" (click)="sair()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
+        </svg>
+        Sair
+    </button>
+</div>
+
+<div class="container">
+    <div class="contadores">
+        <div class="contador">
+            <div>
+                <div class="contador-label">Pendentes</div>
+                <div class="contador-num vermelho">{{ totalPendentes }}</div>
+            </div>
+            <span class="contador-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"
+                    stroke="#CE2B37" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path stroke-linecap="round" d="M12 8v4m0 4h.01" />
+                </svg>
+            </span>
+        </div>
+        <div class="contador">
+            <div>
+                <div class="contador-label">Preparando</div>
+                <div class="contador-num azul">{{ totalPreparo }}</div>
+            </div>
+            <span class="contador-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"
+                    stroke="#3b82f6" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path stroke-linecap="round" d="M12 6v6l4 2" />
+                </svg>
+            </span>
+        </div>
+        <div class="contador">
+            <div>
+                <div class="contador-label">Prontos Hoje</div>
+                <div class="contador-num verde">{{ totalProntos }}</div>
+            </div>
+            <span class="contador-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"
+                    stroke="#009246" stroke-width="2">
+                    <path stroke-linecap="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </span>
+        </div>
+    </div>
+
+    <div class="abas-principais">
+        <button type="button" [class.aba-on]="abaAtiva === 'pedidos'" (click)="abaAtiva = 'pedidos'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2" />
+            </svg>
+            Pedidos
+        </button>
+        <button type="button" [class.aba-on]="abaAtiva === 'inventario'" (click)="abaAtiva = 'inventario'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            Inventário
+        </button>
+    </div>
+
+    <!-- ABA PEDIDOS -->
+    <div *ngIf="abaAtiva === 'pedidos'">
+        <div class="filtros">
+            <button type="button" [class.filtro-laranja]="filtro === 'pendentes'"
+                (click)="filtro = 'pendentes'">Pendentes</button>
+            <button type="button" [class.filtro-azul]="filtro === 'preparo'" (click)="filtro = 'preparo'">Em
+                Preparo</button>
+            <button type="button" (click)="filtro = 'todos'">Todos</button>
+        </div>
+        <div class="lista-pedidos">
+            <div *ngIf="pedidosFiltrados.length === 0" class="vazio">
+                <div class="vazio-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24"
+                        stroke="#009246" stroke-width="1.5">
+                        <path stroke-linecap="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <p>Nenhum pedido na fila!</p>
+                <span>Os novos pedidos aparecerão aqui</span>
+            </div>
+            <div class="card-pedido" *ngFor="let pedido of pedidosFiltrados">
+                <div class="pedido-header">
+                    <div>
+                        <strong>Pedido #{{ pedido.id?.slice(-6).toUpperCase() }}</strong>
+                        <div class="pedido-cliente">{{ pedido.cliente || 'Cliente' }}</div>
+                        <div class="pedido-tempo">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <path stroke-linecap="round" d="M12 6v6l4 2" />
+                            </svg>
+                            {{ tempoAtras(pedido.criadoEm) }}
+                        </div>
+                    </div>
+                    <span class="badge" [ngClass]="getStatusClass(pedido.status)">{{ getStatusLabel(pedido.status)
+                        }}</span>
+                </div>
+                <div class="pedido-itens">
+                    <div *ngFor="let item of pedido.itens" class="pedido-item">
+                        <strong>{{ item.quantidade }}x {{ item.nome }}</strong>
+                        <div class="pedido-desc">{{ item.descricao }}</div>
+                    </div>
+                    <div *ngIf="pedido.observacoes" class="pedido-obs">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <strong>Observações:</strong> {{ pedido.observacoes }}
+                    </div>
+                </div>
+                <button type="button" *ngIf="pedido.status === 'pendente'" class="btn-iniciar"
+                    (click)="iniciarPreparo(pedido)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <path stroke-linecap="round" d="M12 6v6l4 2" />
+                    </svg>
+                    Iniciar Preparo
+                </button>
+                <button type="button" *ngIf="pedido.status === 'em_preparo'" class="btn-pronto"
+                    (click)="marcarPronto(pedido)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Marcar como Pronto
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABA INVENTÁRIO -->
+    <div *ngIf="abaAtiva === 'inventario'">
+        <div class="inv-header">
+            <h2>Gerenciamento de Estoque</h2>
+            <p>Controle seus ingredientes e fornecedores</p>
+        </div>
+        <div class="abas-inv">
+            <button type="button" [class.aba-inv-on]="abaInventario === 'estoque'"
+                (click)="abaInventario = 'estoque'">📦 Estoque</button>
+            <button type="button" [class.aba-inv-on]="abaInventario === 'fornecedores'"
+                (click)="abaInventario = 'fornecedores'">👥 Fornecedores</button>
+            <button type="button" [class.aba-inv-on]="abaInventario === 'precos'" (click)="abaInventario = 'precos'">$
+                Comparação de Preços</button>
+        </div>
+
+        <!-- ESTOQUE -->
+        <div *ngIf="abaInventario === 'estoque'">
+            <div class="estoque-header">
+                <h3>Inventário</h3>
+                <button type="button" class="btn-adicionar" (click)="abrirModalEstoque()">+ Adicionar Item</button>
+            </div>
+            <div class="contadores">
+                <div class="contador">
+                    <div>
+                        <div class="contador-label">Total de Itens</div>
+                        <div class="contador-num">{{ estoque.length }}</div>
+                    </div>
+                    <span>📦</span>
+                </div>
+                <div class="contador">
+                    <div>
+                        <div class="contador-label">Estoque Baixo</div>
+                        <div class="contador-num vermelho">{{ estoque.filter(e => e.quantidade <= e.minimo).length
+                                }}</div>
+                        </div>
+                        <span>⚠️</span>
+                    </div>
+                    <div class="contador">
+                        <div>
+                            <div class="contador-label">Próximo ao Vencimento</div>
+                            <div class="contador-num vermelho">{{ estoque.filter(e => e.validade && e.validade <=
+                                    hoje).length }}</div>
+                            </div>
+                            <span>⚠️</span>
+                        </div>
+                    </div>
+                    <table class="tabela">
+                        <thead>
+                            <tr>
+                                <th>ITEM</th>
+                                <th>CATEGORIA</th>
+                                <th>QUANTIDADE</th>
+                                <th>STATUS</th>
+                                <th>VALIDADE</th>
+                                <th>MELHOR PREÇO</th>
+                                <th>AÇÕES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of estoque">
+                                <td><strong>{{ item.nome }}</strong></td>
+                                <td>{{ item.categoria }}</td>
+                                <td>{{ item.quantidade }}{{ item.unidade }} / min: {{ item.minimo }}{{ item.unidade }}
+                                </td>
+                                <td>
+                                    <span class="status-ok" [class.status-baixo]="item.quantidade <= item.minimo">
+                                        {{ item.quantidade <= item.minimo ? 'BAIXO' : 'OK' }} </span>
+                                </td>
+                                <td [ngClass]="getClasseValidade(item.validade)">{{ item.validade || '-' }}</td>
+                                <td>
+                                    <span *ngIf="item.fornecedores && item.fornecedores.length > 0"
+                                        class="melhor-preco-tag">
+                                        R$ {{ item.fornecedores[0].preco?.toFixed(2) }}
+                                    </span>
+                                    <span *ngIf="!item.fornecedores || item.fornecedores.length === 0"
+                                        class="sem-preco">-</span>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn-editar"
+                                        (click)="abrirModalEstoque(item)">✏️</button>
+                                    <button type="button" class="btn-excluir"
+                                        (click)="excluirEstoque(item.id)">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr *ngIf="estoque.length === 0">
+                                <td colspan="7" class="vazio-tabela">Nenhum item no estoque</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- FORNECEDORES -->
+                <div *ngIf="abaInventario === 'fornecedores'">
+                    <div class="estoque-header">
+                        <h3>Fornecedores</h3>
+                        <button type="button" class="btn-adicionar" (click)="abrirModalFornecedor()">+ Adicionar
+                            Fornecedor</button>
+                    </div>
+                    <div class="grid-fornecedores">
+                        <div class="card-fornecedor" *ngFor="let f of fornecedores">
+                            <div class="forn-header">
+                                <div>
+                                    <strong>{{ f.nome }}</strong>
+                                    <div class="forn-contato">Contato: {{ f.contato }}</div>
+                                </div>
+                                <div class="estrelas">
+                                    <span *ngFor="let s of stars(f.avaliacao)">⭐</span>
+                                </div>
+                            </div>
+                            <div class="forn-info">📞 {{ f.telefone }}</div>
+                            <div class="forn-info">✉️ {{ f.email }}</div>
+                            <div class="forn-info">📍 {{ f.endereco }}</div>
+                            <div class="forn-obs" *ngIf="f.observacoes">{{ f.observacoes }}</div>
+                            <div class="forn-acoes">
+                                <button type="button" class="btn-editar-forn" (click)="abrirModalFornecedor(f)">✏️
+                                    Editar</button>
+                                <button type="button" class="btn-excluir-forn" (click)="excluirFornecedor(f.id)">🗑️
+                                    Remover</button>
+                            </div>
+                        </div>
+                        <div *ngIf="fornecedores.length === 0" class="vazio">
+                            <p>Nenhum fornecedor cadastrado</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COMPARAÇÃO DE PREÇOS -->
+                <div *ngIf="abaInventario === 'precos'">
+                    <h3>Comparação de Preços entre Fornecedores</h3>
+                    <p class="inv-sub">Compare os preços dos mesmos itens oferecidos por diferentes fornecedores para
+                        tomar melhores decisões de compra.</p>
+                    <div *ngIf="comparacaoPrecos.length === 0" class="vazio">
+                        <p>Nenhum item com múltiplos fornecedores ainda</p>
+                        <span>Adicione pelo menos 2 fornecedores por item no estoque para comparar</span>
+                    </div>
+                    <div class="card-preco" *ngFor="let c of comparacaoPrecos">
+                        <div class="preco-item-nome">
+                            {{ $any(c).item.nome }}
+                            <span class="tag">{{ $any(c).item.categoria }}</span>
+                        </div>
+                        <div class="preco-item-estoque">Estoque atual: {{ $any(c).item.quantidade }}{{
+                            $any(c).item.unidade }}</div>
+                        <div class="preco-linha" *ngFor="let f of $any(c).fornecedores; let i = index"
+                            [class.melhor-preco]="i === 0">
+                            <div>
+                                <span>{{ f.nome }}</span>
+                                <span class="badge-melhor" *ngIf="i === 0">Melhor Preço</span>
+                                <div class="preco-data" *ngIf="f.atualizadoEm">Atualizado em {{ f.atualizadoEm }}</div>
+                            </div>
+                            <div class="preco-direita">
+                                <span class="preco-valor">R$ {{ f.preco?.toFixed(2) }}</span>
+                                <span class="preco-diff" *ngIf="i > 0">+R$ {{ (f.preco -
+                                    $any(c).fornecedores[0].preco).toFixed(2) }}</span>
+                            </div>
+                        </div>
+                        <div class="economia-linha">
+                            <strong>Economia potencial:</strong> Escolhendo o melhor preço, você pode economizar até
+                            <strong>R$ {{ $any(c).economia?.toFixed(2) }}</strong> por unidade ({{ $any(c).percentual
+                            }}%)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL ESTOQUE -->
+        <div class="modal-overlay" *ngIf="modalEstoque" (click)="modalEstoque = false">
+            <div class="modal" (click)="$event.stopPropagation()">
+                <h2>{{ editandoEstoque ? 'Editar Item' : 'Adicionar Item ao Estoque' }}</h2>
+                <p>Preencha as informações do item</p>
+                <div class="campo">
+                    <label>Nome do Item *</label>
+                    <input type="text" placeholder="Ex: Tomate San Marzano" [(ngModel)]="novoItem.nome" />
+                </div>
+                <div class="linha-dupla">
+                    <div class="campo">
+                        <label>Categoria *</label>
+                        <select [(ngModel)]="novoItem.categoria">
+                            <option *ngFor="let c of categorias">{{ c }}</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label>Unidade *</label>
+                        <select [(ngModel)]="novoItem.unidade">
+                            <option *ngFor="let u of unidades">{{ u }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="linha-dupla">
+                    <div class="campo">
+                        <label>Quantidade Atual *</label>
+                        <input type="number" [(ngModel)]="novoItem.quantidade" />
+                    </div>
+                    <div class="campo">
+                        <label>Quantidade Mínima *</label>
+                        <input type="number" [(ngModel)]="novoItem.minimo" />
+                    </div>
+                </div>
+                <div class="campo">
+                    <label>Data de Validade</label>
+                    <input type="date" [(ngModel)]="novoItem.validade" />
+                </div>
+                <div class="secao-fornecedores">
+                    <h4>Preços por Fornecedor</h4>
+                    <div class="lista-fornecedores-item" *ngIf="novoItem.fornecedores?.length > 0">
+                        <div class="fornecedor-item-linha" *ngFor="let f of novoItem.fornecedores; let i = index">
+                            <span>{{ f.nome }}</span>
+                            <span>R$ {{ f.preco?.toFixed(2) }}</span>
+                            <span class="forn-data">{{ f.atualizadoEm }}</span>
+                            <button type="button" class="btn-remover-forn"
+                                (click)="removerFornecedorDoItem(i)">✕</button>
+                        </div>
+                    </div>
+                    <div class="adicionar-fornecedor-linha">
+                        <select [(ngModel)]="novoFornecedorItem.nome" class="select-forn">
+                            <option value="">Selecionar fornecedor</option>
+                            <option *ngFor="let f of fornecedores" [value]="f.nome">{{ f.nome }}</option>
+                        </select>
+                        <input type="number" placeholder="Preço" [(ngModel)]="novoFornecedorItem.preco"
+                            class="input-preco" />
+                        <input type="date" [(ngModel)]="novoFornecedorItem.atualizadoEm" class="input-data" />
+                        <button type="button" class="btn-add-forn"
+                            (click)="adicionarFornecedorAoItem()">Adicionar</button>
+                    </div>
+                </div>
+                <div class="modal-acoes">
+                    <button type="button" class="btn-verde" (click)="salvarEstoque()">{{ editandoEstoque ? 'Salvar' :
+                        'Adicionar Item' }}</button>
+                    <button type="button" class="btn-cancelar" (click)="modalEstoque = false">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL FORNECEDOR -->
+        <div class="modal-overlay" *ngIf="modalFornecedor" (click)="modalFornecedor = false">
+            <div class="modal" (click)="$event.stopPropagation()">
+                <h2>{{ editandoFornecedor ? 'Editar Fornecedor' : 'Adicionar Fornecedor' }}</h2>
+                <p>Cadastre um novo fornecedor no sistema</p>
+                <div class="campo">
+                    <label>Nome do Fornecedor *</label>
+                    <input type="text" placeholder="Ex: Importadora Italiana" [(ngModel)]="novoFornecedor.nome" />
+                </div>
+                <div class="linha-dupla">
+                    <div class="campo">
+                        <label>Nome do Contato</label>
+                        <input type="text" placeholder="Ex: Marco Rossi" [(ngModel)]="novoFornecedor.contato" />
+                    </div>
+                    <div class="campo">
+                        <label>Telefone</label>
+                        <input type="tel" placeholder="(11) 3456-7890" [(ngModel)]="novoFornecedor.telefone" />
+                    </div>
+                </div>
+                <div class="campo">
+                    <label>E-mail</label>
+                    <input type="email" placeholder="contato@fornecedor.com.br" [(ngModel)]="novoFornecedor.email" />
+                </div>
+                <div class="campo">
+                    <label>Endereço</label>
+                    <input type="text" placeholder="Rua, número - Cidade, Estado"
+                        [(ngModel)]="novoFornecedor.endereco" />
+                </div>
+                <div class="campo">
+                    <label>Avaliação</label>
+                    <select [(ngModel)]="novoFornecedor.avaliacao">
+                        <option [value]="1">1 Estrela</option>
+                        <option [value]="2">2 Estrelas</option>
+                        <option [value]="3">3 Estrelas</option>
+                        <option [value]="4">4 Estrelas</option>
+                        <option [value]="5">5 Estrelas</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label>Observações</label>
+                    <input type="text" placeholder="Informações adicionais..."
+                        [(ngModel)]="novoFornecedor.observacoes" />
+                </div>
+                <div class="modal-acoes">
+                    <button type="button" class="btn-vermelho" (click)="salvarFornecedor()">{{ editandoFornecedor ?
+                        'Salvar' : 'Adicionar Fornecedor' }}</button>
+                    <button type="button" class="btn-cancelar" (click)="modalFornecedor = false">Cancelar</button>
+                </div>
+            </div>
+        </div>

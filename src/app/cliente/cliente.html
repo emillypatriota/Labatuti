@@ -1,0 +1,699 @@
+<!-- Header -->
+<header class="cliente-header">
+    <div class="header-left">
+        <img src="logo.png" alt="Logo" class="header-logo">
+        <span class="header-saudacao">Olá, {{ usuario?.nome?.split(' ')[0] }}!</span>
+    </div>
+    <div class="header-right">
+        <button class="btn-carrinho" (click)="abrirCarrinho()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m13-9l2 9m-9-4h4" />
+            </svg>
+            @if (totalItensCarrinho() > 0) {
+            <span class="carrinho-badge">{{ totalItensCarrinho() }}</span>
+            }
+        </button>
+        <button class="btn-sair" (click)="sair()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
+            </svg>
+        </button>
+    </div>
+</header>
+
+<!-- Toast -->
+@if (toastMsg()) {
+<div class="toast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+        stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+    {{ toastMsg() }}
+</div>
+}
+
+<!-- Navegação -->
+<div class="nav-abas">
+    <button class="aba" [class.ativa]="abaAtiva() === 'cardapio'" (click)="abaAtiva.set('cardapio')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
+        </svg>
+        Cardápio
+    </button>
+    <button class="aba" [class.ativa]="abaAtiva() === 'pedidos'" (click)="abaAtiva.set('pedidos')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        </svg>
+        Meus Pedidos
+        @if (pedidos().length > 0) {
+        <span class="pedidos-badge">{{ pedidos().length }}</span>
+        }
+    </button>
+</div>
+
+<div class="cliente-body">
+
+    <!-- ABA CARDÁPIO -->
+    @if (abaAtiva() === 'cardapio') {
+
+    @if (pratoDoDia()) {
+    <div class="prato-dia-banner">
+        <div class="prato-dia-img">
+            <img [src]="pratoDoDia()!.imagemUrl" [alt]="pratoDoDia()!.nome">
+            <div class="prato-dia-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                Prato do Dia
+            </div>
+        </div>
+        <div class="prato-dia-info">
+            <p class="prato-dia-tag">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
+                    stroke="#009246" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                OFERTA ESPECIAL DE HOJE
+            </p>
+            <h2>{{ pratoDoDia()!.nome }}</h2>
+            <p class="prato-dia-desc">{{ pratoDoDia()!.descricao }}</p>
+            <div class="prato-dia-preco">
+                <span class="preco-riscado">R$ {{ pratoDoDia()!.preco.toFixed(2).replace('.', ',') }}</span>
+                <span class="preco-desconto">R$ {{ precoComDesconto(pratoDoDia()!).toFixed(2).replace('.', ',')
+                    }}</span>
+                <span class="badge-desconto">-{{ pratoDoDia()!.desconto }}%</span>
+            </div>
+            <button class="btn-adicionar-dia" (click)="adicionar(pratoDoDia()!)">
+                + Adicionar ao Carrinho
+            </button>
+        </div>
+    </div>
+    }
+
+    <div class="categorias-filtro">
+        @for (cat of categorias; track cat) {
+        <button class="cat-btn" [class.ativa]="categoriaAtiva() === cat" (click)="categoriaAtiva.set(cat)">
+            {{ cat }}
+        </button>
+        }
+    </div>
+
+    @for (cat of pratosPorCategoria(); track cat) {
+    @if (categoriaAtiva() === 'Todos' || categoriaAtiva() === cat) {
+    <div class="categoria-bloco">
+        <h2 class="categoria-titulo">{{ cat }}</h2>
+        <div class="pratos-grid">
+            @for (prato of pratosDeCategoria(cat); track prato.id) {
+            <div class="prato-card">
+                <div class="prato-img-wrap">
+                    <img [src]="prato.imagemUrl" [alt]="prato.nome">
+                    @if (prato.pratoDoDia) {
+                    <span class="badge-dia">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="white" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        -{{ prato.desconto }}%
+                    </span>
+                    }
+                </div>
+                <div class="prato-info">
+                    <h3>{{ prato.nome }}</h3>
+                    <p>{{ prato.descricao }}</p>
+                    @if (prato.pratoDoDia) {
+                    <span class="preco-riscado-card">R$ {{ prato.preco.toFixed(2).replace('.', ',') }}</span>
+                    }
+                    <span class="preco-card">R$ {{ precoComDesconto(prato).toFixed(2).replace('.', ',') }}</span>
+                    @if (quantidadeNoCarrinho(prato.id) === 0) {
+                    <button class="btn-add" (click)="adicionar(prato)">+ Adicionar</button>
+                    } @else {
+                    <div class="qty-control">
+                        <button class="qty-btn minus" (click)="diminuir(prato.id)">−</button>
+                        <span>{{ quantidadeNoCarrinho(prato.id) }}</span>
+                        <button class="qty-btn plus" (click)="adicionar(prato)">+</button>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+    }
+    }
+    }
+
+    <!-- ABA MEUS PEDIDOS -->
+    @if (abaAtiva() === 'pedidos') {
+    @if (pedidos().length === 0) {
+    <div class="empty-pedidos">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="#9ca3af"
+            stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 3H8a2 2 0 00-2 2v2h12V5a2 2 0 00-2-2z" />
+        </svg>
+        <h3>Nenhum pedido ainda</h3>
+        <p>Faça seu primeiro pedido e acompanhe o status aqui!</p>
+        <button class="btn-ver-cardapio" (click)="abaAtiva.set('cardapio')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Ver Cardápio
+        </button>
+    </div>
+    } @else {
+    <h2 class="titulo-pedidos">Acompanhe seus pedidos</h2>
+    @for (pedido of pedidos(); track pedido.id) {
+    <div class="pedido-card">
+        <div class="pedido-header">
+            <div class="pedido-header-left">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24"
+                    stroke="#CE2B37" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path stroke-linecap="round" d="M12 6v6l4 2" />
+                </svg>
+                <div>
+                    <strong>Pedido #{{ pedido.id.slice(-8).toUpperCase() }}</strong>
+                    <span class="pedido-data">{{ pedido.criadoEm?.toDate() | date:'dd/MM/yyyy, HH:mm:ss' }}</span>
+                </div>
+            </div>
+            <span class="status-badge">{{ statusLabel(pedido.status) }}</span>
+        </div>
+
+        <div class="progresso-wrap">
+            <div class="progresso-bar">
+                <div class="progresso-fill" [style.width.%]="statusProgresso(pedido.status)"></div>
+            </div>
+            <p class="progresso-texto">
+                @if (pedido.status === 'pendente') { Seu pedido foi recebido e está sendo processado }
+                @if (pedido.status === 'em_preparo') { Seu pedido está sendo preparado }
+                @if (pedido.status === 'pronto') { Seu pedido está pronto para entrega }
+                @if (pedido.status === 'em_entrega') { Seu pedido saiu para entrega }
+                @if (pedido.status === 'entregue') { Pedido entregue com sucesso. Buon appetito! }
+            </p>
+        </div>
+
+        <div class="status-steps">
+            <div class="step"
+                [class.ativo]="['pendente','em_preparo','pronto','em_entrega','entregue'].includes(pedido.status)">
+                <div class="step-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <path stroke-linecap="round" d="M12 6v6l4 2" />
+                    </svg>
+                </div>
+                <span>Pedido Recebido</span>
+            </div>
+            <div class="step" [class.ativo]="['em_preparo','pronto','em_entrega','entregue'].includes(pedido.status)">
+                <div class="step-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" d="M3 12h18M3 6h18M3 18h18" />
+                    </svg>
+                </div>
+                <span>Em Preparação</span>
+            </div>
+            <div class="step" [class.ativo]="['pronto','em_entrega','entregue'].includes(pedido.status)">
+                <div class="step-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <span>Pedido Pronto</span>
+            </div>
+            <div class="step" [class.ativo]="['em_entrega','entregue'].includes(pedido.status)">
+                <div class="step-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </div>
+                <span>Saiu para Entrega</span>
+            </div>
+            <div class="step" [class.ativo]="pedido.status === 'entregue'">
+                <div class="step-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <span>Entregue</span>
+            </div>
+        </div>
+
+        <div class="pedido-detalhes">
+            <p class="detalhes-titulo">Itens do Pedido</p>
+            @for (item of pedido.itens; track item.pratoId) {
+            <div class="detalhe-row">
+                <span>{{ item.quantidade }}x {{ item.nome }}</span>
+                <span>R$ {{ (item.quantidade * item.preco).toFixed(2).replace('.', ',') }}</span>
+            </div>
+            }
+            <div class="detalhe-total">
+                <span>Total:</span>
+                <span class="total-valor">R$ {{ pedido.total.toFixed(2).replace('.', ',') }}</span>
+            </div>
+
+            <p class="detalhes-titulo" style="margin-top:12px">Endereço de Entrega</p>
+            <p class="detalhe-end">{{ pedido.endereco?.rua }}, {{ pedido.endereco?.numero }}</p>
+            <p class="detalhe-end">{{ pedido.endereco?.bairro }} - {{ pedido.endereco?.cidade }}/{{
+                pedido.endereco?.estado }}</p>
+            <p class="detalhe-end">CEP: {{ pedido.endereco?.cep }}</p>
+
+            <p class="detalhes-titulo" style="margin-top:12px">Forma de Pagamento</p>
+            <p class="detalhe-end">{{ pedido.formaPagamento }}</p>
+
+            <!-- Código de confirmação -->
+            @if (pedido.status === 'em_entrega' && pedido.codigoEntrega) {
+            <div
+                style="background:#fff5f5; border:1.5px solid #fecaca; border-radius:10px; padding:16px; text-align:center; margin-top:14px">
+                <p style="font-size:13px; color:#6b7280; margin-bottom:8px; font-weight:600">Código de Confirmação</p>
+                <p style="font-size:2rem; font-weight:800; color:#dc2626; letter-spacing:6px">{{ pedido.codigoEntrega }}
+                </p>
+                <p style="font-size:12px; color:#9ca3af; margin-top:4px">Informe este código ao entregador</p>
+            </div>
+            }
+
+            <!-- Botão avaliar -->
+            @if (pedido.status === 'entregue' && !pedido.avaliado) {
+            <button (click)="abrirAvaliacao(pedido)"
+                style="width:100%; margin-top:14px; background:#009246; color:white; border:none; border-radius:10px; padding:13px; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                Avaliar Pedido e Entregador
+            </button>
+            }
+            @if (pedido.status === 'entregue' && pedido.avaliado) {
+            <div style="text-align:center; padding:12px 0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24"
+                    stroke="#009246" stroke-width="2">
+                    <path stroke-linecap="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p style="font-size:13px; color:#009246; font-weight:600; margin-top:4px">Obrigado pela sua avaliação!
+                </p>
+            </div>
+            }
+        </div>
+    </div>
+    }
+    }
+    }
+</div>
+
+<!-- Modal Carrinho -->
+@if (showCarrinho()) {
+<div class="modal-backdrop" (click)="fecharCarrinho()">
+    <div class="modal-carrinho" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <div>
+                <h2>Seu Carrinho</h2>
+                <p>Revise seus itens e prossiga para o pagamento.</p>
+            </div>
+            <button class="modal-close" (click)="fecharCarrinho()">✕</button>
+        </div>
+        <div class="modal-body">
+            @if (carrinho().length === 0) {
+            <div
+                style="display:flex; flex-direction:column; align-items:center; padding:40px 0; gap:12px; color:#9ca3af">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m13-9l2 9m-5-4a1 1 0 100 2 1 1 0 000-2zm-6 0a1 1 0 100 2 1 1 0 000-2z" />
+                </svg>
+                <p style="font-size:14px; font-weight:500">Seu carrinho está vazio</p>
+            </div>
+            } @else {
+            @for (item of carrinho(); track item.prato.id) {
+            <div class="carrinho-item">
+                <img [src]="item.prato.imagemUrl" [alt]="item.prato.nome">
+                <div class="carrinho-item-info">
+                    <strong>{{ item.prato.nome }}</strong>
+                    <span>R$ {{ item.prato.preco.toFixed(2).replace('.', ',') }} cada</span>
+                    <div class="qty-control">
+                        <button class="qty-btn minus" (click)="diminuir(item.prato.id)">−</button>
+                        <span>{{ item.quantidade }}</span>
+                        <button class="qty-btn plus" (click)="adicionar(item.prato)">+</button>
+                    </div>
+                </div>
+                <span class="carrinho-item-total">R$ {{ (item.prato.preco * item.quantidade).toFixed(2).replace('.',
+                    ',') }}</span>
+            </div>
+            }
+            <div class="carrinho-total">
+                <span>Total:</span>
+                <span class="total-valor">R$ {{ totalCarrinho().toFixed(2).replace('.', ',') }}</span>
+            </div>
+            <button class="btn-continuar" (click)="continuarPagamento()">Continuar para Pagamento</button>
+            }
+        </div>
+    </div>
+</div>
+}
+
+<!-- Modal Finalizar Pedido -->
+@if (showFinalizarPedido()) {
+<div class="modal-backdrop" (click)="fecharFinalizar()">
+    <div class="modal-finalizar" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <div>
+                <h2>Finalizar Pedido</h2>
+                <p>Preencha os campos abaixo para finalizar seu pedido.</p>
+            </div>
+            <button class="modal-close" (click)="fecharFinalizar()">✕</button>
+        </div>
+
+        <div class="steps-row">
+            @for (s of [1,2,3,4]; track s) {
+            <div class="step-circle" [class.concluido]="stepPagamento() > s" [class.atual]="stepPagamento() === s">
+                @if (stepPagamento() > s) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
+                    stroke="white" stroke-width="3">
+                    <path stroke-linecap="round" d="M5 13l4 4L19 7" />
+                </svg>
+                } @else { {{ s }} }
+            </div>
+            @if (s < 4) { <div class="step-line" [class.concluido]="stepPagamento() > s">
+        </div>
+        }
+        }
+    </div>
+
+    <div class="modal-body">
+
+        <!-- Step 1: Pagamento -->
+        @if (stepPagamento() === 1) {
+        <h3 class="step-titulo">Escolha a forma de pagamento</h3>
+        <div class="pagamento-grid">
+            @for (op of [
+            {valor: 'PIX', label: 'PIX', sub: 'Pagamento instantâneo'},
+            {valor: 'Cartão de Crédito', label: 'Cartão de Crédito', sub: 'Parcelamento disponível'},
+            {valor: 'Cartão de Débito', label: 'Cartão de Débito', sub: 'Débito na entrega'},
+            {valor: 'Dinheiro', label: 'Dinheiro', sub: 'Na entrega'}
+            ]; track op.valor) {
+            <div class="pagamento-op" [class.selecionado]="formaPagamento() === op.valor"
+                (click)="formaPagamento.set(op.valor)">
+                @if (formaPagamento() === op.valor) { <span class="op-dot">•</span> }
+                <div class="op-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="1.5">
+                        <rect x="2" y="5" width="20" height="14" rx="2" />
+                        <path d="M2 10h20" />
+                    </svg>
+                </div>
+                <div>
+                    <strong>{{ op.label }}</strong>
+                    <span>{{ op.sub }}</span>
+                </div>
+            </div>
+            }
+        </div>
+        @if (errosStep()['pagamento']) {
+        <p class="erro">{{ errosStep()['pagamento'] }}</p>
+        }
+        }
+
+        <!-- Step 2: Endereço -->
+        @if (stepPagamento() === 2) {
+        <h3 class="step-titulo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round"
+                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+            </svg>
+            Endereço de entrega
+        </h3>
+        <div class="form-row">
+            <div class="form-group full">
+                <label>CEP *</label>
+                <input type="text" placeholder="00000-000" [value]="cep()" (input)="cep.set($any($event.target).value)"
+                    [class.erro-input]="errosStep()['cep']">
+                @if (errosStep()['cep']) { <span class="erro">{{ errosStep()['cep'] }}</span> }
+            </div>
+            <div class="form-group">
+                <label>Estado *</label>
+                <input type="text" [value]="estado()" (input)="estado.set($any($event.target).value)">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Cidade *</label>
+            <input type="text" [value]="cidade()" (input)="cidade.set($any($event.target).value)"
+                [class.erro-input]="errosStep()['cidade']">
+            @if (errosStep()['cidade']) { <span class="erro">{{ errosStep()['cidade'] }}</span> }
+        </div>
+        <div class="form-group">
+            <label>Bairro *</label>
+            <input type="text" placeholder="Centro" [value]="bairro()" (input)="bairro.set($any($event.target).value)"
+                [class.erro-input]="errosStep()['bairro']">
+            @if (errosStep()['bairro']) { <span class="erro">{{ errosStep()['bairro'] }}</span> }
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Rua *</label>
+                <input type="text" placeholder="Rua das Flores" [value]="rua()"
+                    (input)="rua.set($any($event.target).value)" [class.erro-input]="errosStep()['rua']">
+                @if (errosStep()['rua']) { <span class="erro">{{ errosStep()['rua'] }}</span> }
+            </div>
+            <div class="form-group">
+                <label>Número *</label>
+                <input type="text" placeholder="123" [value]="numero()" (input)="numero.set($any($event.target).value)"
+                    [class.erro-input]="errosStep()['numero']">
+                @if (errosStep()['numero']) { <span class="erro">{{ errosStep()['numero'] }}</span> }
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Complemento</label>
+            <input type="text" placeholder="Apto 45 - Bloco B" [value]="complemento()"
+                (input)="complemento.set($any($event.target).value)">
+        </div>
+        <div class="form-group">
+            <label>Ponto de Referência</label>
+            <input type="text" placeholder="Próximo ao supermercado" [value]="referencia()"
+                (input)="referencia.set($any($event.target).value)">
+        </div>
+        }
+
+        <!-- Step 3: Dados -->
+        @if (stepPagamento() === 3) {
+        <h3 class="step-titulo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round"
+                    d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z" />
+            </svg>
+            Confirme seus dados
+        </h3>
+        <div class="form-group">
+            <label>Nome Completo *</label>
+            <input type="text" [value]="nomeCliente()" (input)="nomeCliente.set($any($event.target).value)"
+                [class.erro-input]="errosStep()['nome']">
+            @if (errosStep()['nome']) { <span class="erro">{{ errosStep()['nome'] }}</span> }
+        </div>
+        <div class="form-group">
+            <label>Telefone *</label>
+            <input type="text" placeholder="(11) 98765-4321" [value]="telefoneCliente()"
+                (input)="telefoneCliente.set($any($event.target).value)" [class.erro-input]="errosStep()['telefone']">
+            @if (errosStep()['telefone']) { <span class="erro">{{ errosStep()['telefone'] }}</span> }
+        </div>
+        <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" [value]="emailCliente()" (input)="emailCliente.set($any($event.target).value)">
+        </div>
+        <div class="form-group">
+            <label>Observações (opcional)</label>
+            <textarea rows="3" placeholder="Adicione observações sobre seu pedido..." [value]="observacoes()"
+                (input)="observacoes.set($any($event.target).value)"></textarea>
+        </div>
+        }
+
+        <!-- Step 4: Revisão -->
+        @if (stepPagamento() === 4) {
+        <h3 class="step-titulo">Revise seu pedido</h3>
+
+        <div class="revisao-bloco">
+            <p class="revisao-titulo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
+                </svg>
+                Itens do Pedido
+            </p>
+            @for (item of carrinho(); track item.prato.id) {
+            <div class="detalhe-row">
+                <span>{{ item.quantidade }}x {{ item.prato.nome }}</span>
+                <span>R$ {{ (item.prato.preco * item.quantidade).toFixed(2).replace('.', ',') }}</span>
+            </div>
+            }
+        </div>
+
+        <div class="revisao-bloco">
+            <p class="revisao-titulo">Forma de Pagamento</p>
+            <p class="revisao-valor">{{ formaPagamento() }}</p>
+        </div>
+
+        <div class="revisao-bloco">
+            <p class="revisao-titulo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round"
+                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+                </svg>
+                Endereço de Entrega
+            </p>
+            <p class="revisao-valor">{{ rua() }}, {{ numero() }}</p>
+            <p class="revisao-valor">{{ bairro() }} - {{ cidade() }}/{{ estado() }}</p>
+            <p class="revisao-valor">CEP: {{ cep() }}</p>
+        </div>
+
+        <div class="revisao-bloco">
+            <p class="revisao-titulo">Dados de Contato</p>
+            <p class="revisao-valor">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round"
+                        d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z" />
+                </svg>
+                {{ nomeCliente() }}
+            </p>
+            <p class="revisao-valor">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round"
+                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                {{ telefoneCliente() }}
+            </p>
+            <p class="revisao-valor">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round"
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                {{ emailCliente() }}
+            </p>
+        </div>
+
+        <!-- CUPOM -->
+        <div class="revisao-bloco">
+            <p class="revisao-titulo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round"
+                        d="M7 7h.01M3 5h18a1 1 0 011 1v4a2 2 0 000 4v4a1 1 0 01-1 1H3a1 1 0 01-1-1v-4a2 2 0 000-4V6a1 1 0 011-1z" />
+                </svg>
+                Cupom de Desconto
+            </p>
+            @if (!cupomAplicado()) {
+            <div style="display:flex; gap:8px; margin-top:8px">
+                <input type="text" placeholder="DIGITE SEU CUPOM"
+                    style="flex:1; padding:10px 14px; border:1.5px solid #d1d5db; border-radius:8px; font-size:14px; outline:none; text-transform:uppercase"
+                    [value]="cupomDigitado()" (input)="cupomDigitado.set($any($event.target).value.toUpperCase())" />
+                <button (click)="aplicarCupom()"
+                    style="background:#CE2B37; color:white; border:none; border-radius:8px; padding:10px 16px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap">
+                    Aplicar
+                </button>
+            </div>
+            @if (cupomErro()) {
+            <p style="font-size:12px; color:#CE2B37; margin-top:4px">{{ cupomErro() }}</p>
+            }
+            } @else {
+            <div
+                style="display:flex; align-items:center; justify-content:space-between; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:10px 14px; margin-top:8px">
+                <span style="font-size:13px; color:#15803d; font-weight:600">✓ {{ cupomAplicado().codigo }}
+                    — desconto de R$ {{ descontoCupom.toFixed(2).replace('.', ',') }}</span>
+                <button (click)="removerCupom()"
+                    style="background:none; border:none; color:#CE2B37; cursor:pointer; font-size:13px">Remover</button>
+            </div>
+            }
+        </div>
+
+        <div class="carrinho-total">
+            <span>Total:</span>
+            <span class="total-valor">R$ {{ totalCarrinho().toFixed(2).replace('.', ',') }}</span>
+        </div>
+        }
+    </div>
+
+    <div class="modal-footer">
+        @if (stepPagamento() > 1) {
+        <button class="btn-voltar" (click)="voltarStep()">‹ Voltar</button>
+        }
+        @if (stepPagamento() < 4) { <button class="btn-proximo" [disabled]="stepPagamento() === 1 && !formaPagamento()"
+            (click)="proximoStep()">Próximo ›</button>
+            } @else {
+            <button class="btn-confirmar" (click)="confirmarPedido()">✓ Confirmar Pedido</button>
+            }
+    </div>
+</div>
+</div>
+}
+
+<!-- Modal Avaliação -->
+@if (showAvaliacao()) {
+<div class="modal-backdrop" (click)="showAvaliacao.set(false)">
+    <div class="modal-carrinho" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <div>
+                <h2>Avaliar Pedido</h2>
+                <p>Por favor, avalie seu pedido e a entrega.</p>
+            </div>
+            <button class="modal-close" (click)="showAvaliacao.set(false)">✕</button>
+        </div>
+        <div class="modal-body">
+            @if (!avaliacaoEnviada()) {
+            <p style="font-size:14px; font-weight:600; color:#1f2937; margin-bottom:10px">Como foi seu pedido?</p>
+            <div style="display:flex; justify-content:center; gap:8px; margin-bottom:20px">
+                @for (star of [1,2,3,4,5]; track star) {
+                <button (click)="setNotaPedido(star)"
+                    style="background:none; border:none; cursor:pointer; font-size:32px; color:#f59e0b">
+                    {{ notaPedido() >= star ? '★' : '☆' }}
+                </button>
+                }
+            </div>
+            <p style="font-size:14px; font-weight:600; color:#1f2937; margin-bottom:10px">Como foi a entrega?</p>
+            <div style="display:flex; justify-content:center; gap:8px; margin-bottom:20px">
+                @for (star of [1,2,3,4,5]; track star) {
+                <button (click)="setNotaEntrega(star)"
+                    style="background:none; border:none; cursor:pointer; font-size:32px; color:#f59e0b">
+                    {{ notaEntrega() >= star ? '★' : '☆' }}
+                </button>
+                }
+            </div>
+            <div class="form-group">
+                <label>Comentário (opcional)</label>
+                <textarea rows="3" placeholder="Conte-nos sobre sua experiência..." [value]="comentarioAvaliacao()"
+                    (input)="comentarioAvaliacao.set($any($event.target).value)"
+                    style="padding:10px 14px; border:1.5px solid #d1d5db; border-radius:8px; font-size:14px; outline:none; width:100%; resize:none"></textarea>
+            </div>
+            <button (click)="enviarAvaliacao()"
+                style="width:100%; background:#009246; color:white; border:none; border-radius:10px; padding:14px; font-size:15px; font-weight:600; cursor:pointer; margin-top:8px">
+                Enviar Avaliação
+            </button>
+            } @else {
+            <div style="text-align:center; padding:40px 0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="none" viewBox="0 0 24 24"
+                    stroke="#009246" stroke-width="2">
+                    <path stroke-linecap="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p style="font-size:16px; font-weight:700; color:#1f2937; margin-top:12px">Obrigado pela sua
+                    avaliação!</p>
+            </div>
+            }
+        </div>
+    </div>
+</div>
+}

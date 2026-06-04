@@ -1,0 +1,132 @@
+<header class="navbar">
+    <div class="container nav-content">
+        <img src="logo.png" class="logo" alt="Logo Labatuti">
+        <nav>
+            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+                translate="no">Início</a>
+            <a (click)="irParaSobre()" translate="no">Sobre Nós</a>
+        </nav>
+        <button class="btn-primary" (click)="irParaCadastro()">Fazer Pedido</button>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="container hero-content">
+        <div class="hero-text">
+            <span class="badge">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 3C9.5 3 7.5 4.5 7 6.5C6.5 6.2 5.8 6 5 6C3.3 6 2 7.3 2 9C2 10.7 3.3 12 5 12H19C20.7 12 22 10.7 22 9C22 7.3 20.7 6 19 6C18.2 6 17.5 6.2 17 6.5C16.5 4.5 14.5 3 12 3ZM8 13V19H16V13H8ZM7 19H17V21H7V19Z" />
+                </svg>
+                Autêntica Cozinha Italiana
+            </span>
+            <h1>Sabor da Itália, <span class="highlight">na sua casa</span></h1>
+            <p>Pratos tradicionais italianos preparados com ingredientes selecionados e entregues com carinho
+                diretamente na sua porta.</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" (click)="irParaCadastro()">Peça Agora</button>
+                <button class="btn-outline" (click)="irParaSobre()">Conheça-nos</button>
+            </div>
+            <div class="hero-stats">
+                <span>⏱️ Entrega em 40-50 min</span>
+                <span>⭐ 4.8 (500+ avaliações)</span>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600" alt="Prato italiano">
+            <div class="hero-badge">
+                <span class="hero-badge-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 24 24">
+                        <path
+                            d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z" />
+                    </svg>
+                </span>
+                <div>
+                    <strong>1000+</strong>
+                    <p>Pedidos entregues</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="pratos">
+    <div class="container">
+        <h2>Nossos Pratos Especiais</h2>
+        <p class="sub">Explore alguns dos nossos pratos mais amados, preparados com receitas tradicionais</p>
+        <div class="cards">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1612874742237-6526221588e3?w=400" alt="Carbonara">
+                <div class="card-content">
+                    <h3>Spaghetti Carbonara</h3>
+                    <p>Autêntico espaguete com molho carbonara</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1546964124-0cce460f38ef?w=400" alt="Ossobuco">
+                <div class="card-content">
+                    <h3>Ossobuco alla Milanese</h3>
+                    <p>Ossobuco cozido lentamente</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400" alt="Tiramisu">
+                <div class="card-content">
+                    <h3>Tiramisu</h3>
+                    <p>Sobremesa italiana clássica</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="beneficios">
+    <div class="container">
+        <h2>Por que escolher o LABATUTI?</h2>
+        <div class="beneficios-grid">
+            <div class="beneficio">
+                <div class="icon-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 24 24">
+                        <path
+                            d="M12 3C9.5 3 7.5 4.5 7 6.5C6.5 6.2 5.8 6 5 6C3.3 6 2 7.3 2 9C2 10.7 3.3 12 5 12H19C20.7 12 22 10.7 22 9C22 7.3 20.7 6 19 6C18.2 6 17.5 6.2 17 6.5C16.5 4.5 14.5 3 12 3ZM8 13V19H16V13H8ZM7 19H17V21H7V19Z" />
+                    </svg>
+                </div>
+                <h3>Chefs Especializados</h3>
+                <p>Nossa equipe é formada por chefs com experiência na Itália</p>
+            </div>
+            <div class="beneficio destaque">
+                <div class="icon-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                </div>
+                <h3>Ingredientes Premium</h3>
+                <p>Importamos ingredientes diretamente da Itália</p>
+            </div>
+            <div class="beneficio">
+                <div class="icon-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" />
+                    </svg>
+                </div>
+                <h3>Entrega Rápida</h3>
+                <p>Seus pratos chegam quentinhos em até 50 minutos</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta">
+    <div class="container">
+        <h2>Pronto para uma experiência italiana autêntica?</h2>
+        <p>Faça seu pedido agora e receba em casa com rapidez e qualidade</p>
+        <button class="btn-outline-white" (click)="irParaCadastro()">Começar Pedido</button>
+    </div>
+</section>
+
+<footer>
+    <img src="logo.png" alt="Logo">
+    <p>©️ 2024 LABATUTI. Todos os direitos reservados.</p>
+</footer>

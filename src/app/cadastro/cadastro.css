@@ -1,0 +1,255 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.btn-voltar {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    background: none;
+    border: none;
+    font-size: 15px;
+    color: #444;
+    cursor: pointer;
+    font-weight: 500;
+    z-index: 100;
+}
+
+.btn-voltar:hover {
+    color: #CE2B37;
+}
+
+.toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border: 1px solid #b7ebc8;
+    color: #1a7a3c;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    z-index: 999;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.pagina {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #FFF5F5 0%, #FFE8E8 50%, #FFF5F5 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 16px;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
+    border: 1px solid #e5e7eb;
+}
+
+.logo {
+    display: block;
+    height: 70px;
+    width: auto;
+    object-fit: contain;
+    margin: 0 auto 20px;
+}
+
+.subtitulo {
+    text-align: center;
+    color: #444;
+    font-size: 1rem;
+    margin-bottom: 24px;
+}
+
+.abas {
+    display: flex;
+    background: #f0f0f0;
+    border-radius: 999px;
+    padding: 4px;
+    margin-bottom: 28px;
+}
+
+.abas button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 15px;
+    color: #666;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.abas button.aba-ativa {
+    background: white;
+    color: #1f2937;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.campo {
+    margin-bottom: 16px;
+}
+
+.campo label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 6px;
+}
+
+.campo input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.campo input:focus {
+    border-color: #CE2B37;
+}
+
+.input-erro {
+    border-color: #CE2B37 !important;
+    background: #fff5f5;
+}
+
+.msg-erro {
+    color: #CE2B37;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.linha-dupla {
+    display: flex;
+    gap: 16px;
+}
+
+.linha-dupla .campo {
+    flex: 1;
+}
+
+.esqueceu {
+    color: #CE2B37;
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    margin-top: -4px;
+}
+
+.esqueceu:hover {
+    text-decoration: underline;
+}
+
+.btn-vermelho {
+    width: 100%;
+    background: #CE2B37;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s;
+}
+
+.btn-vermelho:hover {
+    background: #b02030;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal {
+    background: white;
+    border-radius: 16px;
+    padding: 36px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+}
+
+.modal h2 {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+    color: #1f2937;
+}
+
+.modal p {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.modal label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 6px;
+}
+
+.modal input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    margin-bottom: 16px;
+    outline: none;
+}
+
+.modal input:focus {
+    border-color: #CE2B37;
+}
+
+.modal-fechar {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #666;
+}

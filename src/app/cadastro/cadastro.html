@@ -1,0 +1,97 @@
+<!-- Toast de sucesso -->
+<div class="toast" *ngIf="toastSucesso">✔ {{ toastSucesso }}</div>
+
+<!-- Botão Voltar -->
+<button class="btn-voltar" (click)="voltar()">← Voltar</button>
+
+<!-- Modal Recuperar Senha -->
+<div class="modal-overlay" *ngIf="mostrarRecuperar" (click)="fecharRecuperar()">
+    <div class="modal" (click)="$event.stopPropagation()">
+        <button class="modal-fechar" (click)="fecharRecuperar()">✕</button>
+        <h2>Recuperar Senha</h2>
+        <p>Digite seu email e enviaremos instruções para redefinir sua senha.</p>
+        <label>Email</label>
+        <input type="email" placeholder="seu@email.com" [(ngModel)]="recuperarEmail"
+            [class.input-erro]="erros.recuperar" />
+        <div class="msg-erro" *ngIf="erros.recuperar">{{ erros.recuperar }}</div>
+        <button class="btn-vermelho" (click)="recuperarSenha()">Enviar Instruções</button>
+    </div>
+</div>
+
+<!-- Card principal -->
+<div class="pagina">
+    <div class="card">
+        <img src="logo.png" alt="Logo Labatuti" class="logo" />
+        <p class="subtitulo">Entre ou cadastre-se para fazer seu pedido</p>
+
+        <div class="abas">
+            <button [class.aba-ativa]="aba === 'entrar'" (click)="aba = 'entrar'">Entrar</button>
+            <button [class.aba-ativa]="aba === 'cadastrar'" (click)="aba = 'cadastrar'">Cadastrar</button>
+        </div>
+
+        <!-- ABA ENTRAR -->
+        <div *ngIf="aba === 'entrar'">
+            <div class="campo">
+                <label>Email</label>
+                <input type="email" placeholder="seu@email.com" [(ngModel)]="loginEmail"
+                    [class.input-erro]="erros.loginEmail" />
+                <div class="msg-erro" *ngIf="erros.loginEmail">{{ erros.loginEmail }}</div>
+            </div>
+            <div class="campo">
+                <label>Senha</label>
+                <input type="password" placeholder="••••••••" [(ngModel)]="loginSenha"
+                    [class.input-erro]="erros.loginSenha" />
+                <div class="msg-erro" *ngIf="erros.loginSenha">{{ erros.loginSenha }}</div>
+            </div>
+            <div class="msg-erro" *ngIf="erros.loginGeral">{{ erros.loginGeral }}</div>
+            <p class="esqueceu" (click)="mostrarRecuperar = true">Esqueceu sua senha?</p>
+            <button class="btn-vermelho" (click)="entrar()">Entrar</button>
+        </div>
+
+        <!-- ABA CADASTRAR -->
+        <div *ngIf="aba === 'cadastrar'">
+            <div class="campo">
+                <label>Nome Completo *</label>
+                <input type="text" placeholder="João da Silva" [(ngModel)]="nome" [class.input-erro]="erros.nome" />
+                <div class="msg-erro" *ngIf="erros.nome">{{ erros.nome }}</div>
+            </div>
+            <div class="campo">
+                <label>Email *</label>
+                <input type="email" placeholder="seu@email.com" [(ngModel)]="email" [class.input-erro]="erros.email" />
+                <div class="msg-erro" *ngIf="erros.email">{{ erros.email }}</div>
+            </div>
+            <div class="linha-dupla">
+                <div class="campo">
+                    <label>Telefone *</label>
+                    <input type="tel" placeholder="(11) 99999-9999" [(ngModel)]="telefone"
+                        [class.input-erro]="erros.telefone" />
+                    <div class="msg-erro" *ngIf="erros.telefone">{{ erros.telefone }}</div>
+                </div>
+                <div class="campo">
+                    <label>CPF *</label>
+                    <input type="text" placeholder="000.000.000-00" [(ngModel)]="cpf" [class.input-erro]="erros.cpf" />
+                    <div class="msg-erro" *ngIf="erros.cpf">{{ erros.cpf }}</div>
+                </div>
+            </div>
+            <div class="campo">
+                <label>Data de Nascimento *</label>
+                <input type="date" [(ngModel)]="dataNascimento" [class.input-erro]="erros.dataNascimento" />
+                <div class="msg-erro" *ngIf="erros.dataNascimento">{{ erros.dataNascimento }}</div>
+            </div>
+            <div class="campo">
+                <label>Senha *</label>
+                <input type="password" placeholder="Mínimo 6 caracteres" [(ngModel)]="senha"
+                    [class.input-erro]="erros.senha" />
+                <div class="msg-erro" *ngIf="erros.senha">{{ erros.senha }}</div>
+            </div>
+            <div class="campo">
+                <label>Confirmar Senha *</label>
+                <input type="password" placeholder="Digite a senha novamente" [(ngModel)]="confirmarSenha"
+                    [class.input-erro]="erros.confirmarSenha" />
+                <div class="msg-erro" *ngIf="erros.confirmarSenha">{{ erros.confirmarSenha }}</div>
+            </div>
+            <div class="msg-erro" *ngIf="erros.geral">{{ erros.geral }}</div>
+            <button class="btn-vermelho" (click)="cadastrar()">Criar Conta</button>
+        </div>
+    </div>
+</div>
