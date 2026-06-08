@@ -246,15 +246,15 @@ firebase deploy
 
 | Integrante                     | Responsabilidades                                                 |
 | ------------------------------ | ----------------------------------------------------------------- |
-| Emilly Vitória Garcia Patriota | Tela Inicial (Home), Cadastro de Usuários e Módulo Cozinha        |
-| Lucas                          | Painel Administrativo (Admin), Módulo Cliente e Página Sobre Nós  |
-| Enzo                           | Módulo Entregador, Painel Administrativo (Admin) e Módulo Cliente |
+| Emilly Patriota                | Tela Inicial (Home), Cadastro de Usuários e Módulo Cozinha        |
+| Lucas Silva                    | Painel Administrativo (Admin), Módulo Cliente e Página Sobre Nós  |
+| Enzo  Cruz                     | Módulo Entregador, Painel Administrativo (Admin) e Módulo Cliente |
 
 ---
 
 ## 🎓 Curso
 
-Projeto desenvolvido para a disciplina de **Desenvolvimento Web** do curso de **Tecnólogo em Análise e Desenvolvimento de Sistemas (ADS)**.
+Projeto desenvolvido para a disciplina de **Desenvolvimento Front-End** do curso de **Tecnólogo em Análise e Desenvolvimento de Sistemas (ADS)**.
 
 ---
 
