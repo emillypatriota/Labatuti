@@ -103,41 +103,6 @@ Cliente / Funcionários
 | HTML5                   | -      | Estrutura                    |
 | CSS3                    | -      | Estilização                  |
 
----
-
-## 📸 Capturas de Tela
-
-> Adicione aqui imagens das principais telas do sistema.
-
-### Tela Inicial
-
-```md
-![Home](docs/home.png)
-```
-
-### Área do Cliente
-
-```md
-![Cliente](docs/cliente.png)
-```
-
-### Área da Cozinha
-
-```md
-![Cozinha](docs/cozinha.png)
-```
-
-### Área do Entregador
-
-```md
-![Entregador](docs/entregador.png)
-```
-
-### Painel Administrativo
-
-```md
-![Admin](docs/admin.png)
-```
 
 ---
 
