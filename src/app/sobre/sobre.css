@@ -204,3 +204,57 @@ nav a.active {
     height: 60px;
     margin-bottom: 10px;
 }
+
+/* ===== RESPONSIVO ===== */
+
+@media (max-width: 768px) {
+
+    .container,
+    .sobre-wrapper {
+        padding: 0 16px;
+    }
+
+    .nav-content {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .logo {
+        height: 44px;
+    }
+
+    nav {
+        order: 3;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .sobre-section {
+        padding: 36px 0;
+    }
+
+    .sobre-section h1 {
+        font-size: 1.8rem;
+    }
+
+    .titulo-sessao {
+        font-size: 1.5rem;
+        margin-bottom: 28px;
+    }
+
+    .cards-container {
+        flex-direction: column;
+        margin-bottom: 40px;
+    }
+
+    .contato-box {
+        padding: 24px;
+    }
+
+    .contato-info {
+        flex-direction: column;
+        gap: 20px;
+    }
+}

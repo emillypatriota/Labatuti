@@ -802,3 +802,97 @@
     color: #6b7280;
     padding: 12px;
 }
+
+/* ===== RESPONSIVO ===== */
+
+@media (max-width: 900px) {
+    .header {
+        padding: 12px 16px;
+    }
+
+    .header-left .logo {
+        height: 36px;
+    }
+
+    .header-left h1 {
+        font-size: 1.05rem;
+    }
+
+    .header-left p {
+        font-size: 11px;
+    }
+
+    .container {
+        padding: 14px;
+    }
+
+    .contadores {
+        flex-wrap: wrap;
+    }
+
+    .contador {
+        flex: 1 1 calc(50% - 8px);
+        min-width: 140px;
+    }
+
+    .abas-principais,
+    .filtros {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 4px;
+    }
+
+    .abas-principais button,
+    .filtros button {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .grid-fornecedores {
+        grid-template-columns: 1fr;
+    }
+
+    .estoque-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .tabela-scroll {
+        overflow-x: auto;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+    }
+
+    .tabela {
+        border: none;
+        min-width: 640px;
+    }
+
+    .modal {
+        padding: 24px 20px;
+        width: 92%;
+    }
+
+    .adicionar-fornecedor-linha {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .select-forn,
+    .input-preco,
+    .input-data,
+    .btn-add-forn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .contador {
+        flex: 1 1 100%;
+    }
+
+    .contador-num {
+        font-size: 1.6rem;
+    }
+}
