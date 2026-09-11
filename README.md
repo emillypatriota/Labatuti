@@ -93,7 +93,7 @@ Cliente / Funcionários
 ## 🛠️ Tecnologias Utilizadas
 
 | Tecnologia              | Versão | Finalidade                   |
-| ----------------------- | ------ | ---------------------------- |
+| ------------------------ | ------ | ----------------------------- |
 | Angular                 | 19+    | Desenvolvimento Frontend     |
 | TypeScript              | 5+     | Linguagem principal          |
 | Angular Signals         | 19+    | Gerenciamento de estado      |
@@ -102,7 +102,6 @@ Cliente / Funcionários
 | Firebase Hosting        | -      | Hospedagem                   |
 | HTML5                   | -      | Estrutura                    |
 | CSS3                    | -      | Estilização                  |
-
 
 ---
 
@@ -134,12 +133,12 @@ Avaliação do pedido
 
 ## 🔐 Perfis de Acesso
 
-| Perfil        | E-mail                                                    |
-| ------------- | --------------------------------------------------------- |
-| Administrador | [admin@labatuti.com](mailto:admin@labatuti.com)           |
-| Cozinha       | [cozinha@labatuti.com](mailto:cozinha@labatuti.com)       |
-| Entregador    | [entregador@labatuti.com](mailto:entregador@labatuti.com) |
-| Cliente       | Cadastro livre pela plataforma                            |
+| Perfil        | E-mail                                                    | Senha        |
+| -------------- | ----------------------------------------------------------- | ------------- |
+| Administrador | [admin@labatuti.com](mailto:admin@labatuti.com)           | admin123     |
+| Cozinha       | [cozinha@labatuti.com](mailto:cozinha@labatuti.com)       | cozinha123   |
+| Entregador    | [entregador@labatuti.com](mailto:entregador@labatuti.com) | entrega123   |
+| Cliente       | Cadastro livre pela plataforma                             | -             |
 
 > As credenciais administrativas são disponibilizadas apenas para demonstração e avaliação do projeto.
 
@@ -175,7 +174,7 @@ labatuti/
 ## 🗄️ Estrutura do Banco de Dados
 
 | Coleção      | Descrição                      |
-| ------------ | ------------------------------ |
+| ------------- | -------------------------------- |
 | usuarios     | Dados dos usuários cadastrados |
 | pratos       | Cardápio do restaurante        |
 | pedidos      | Pedidos realizados             |
@@ -242,16 +241,6 @@ firebase deploy
 
 ---
 
-## 👥 Equipe de Desenvolvimento
-
-| Integrante                     | Responsabilidades                                                 |
-| ------------------------------ | ----------------------------------------------------------------- |
-| Emilly Patriota                | Tela Inicial (Home), Cadastro de Usuários e Módulo Cozinha        |
-| Lucas Silva                    | Painel Administrativo (Admin), Módulo Cliente e Página Sobre Nós  |
-| Enzo  Cruz                     | Módulo Entregador, Painel Administrativo (Admin) e Módulo Cliente |
-
----
-
 ## 🎓 Curso
 
 Projeto desenvolvido para a disciplina de **Desenvolvimento Front-End** do curso de **Tecnólogo em Análise e Desenvolvimento de Sistemas (ADS)**.
@@ -265,5 +254,5 @@ Projeto desenvolvido exclusivamente para fins acadêmicos e educacionais.
 ---
 
 <p align="center">
-  Feito com ❤️ pela equipe Labatuti
+  Feito com ❤️ por Emilly Patriota
 </p>
