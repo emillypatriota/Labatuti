@@ -242,199 +242,197 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
 
-                    <!-- FORNECEDORES -->
-                    <div *ngIf="abaInventario === 'fornecedores'">
-                        <div class="estoque-header">
-                            <h3>Fornecedores</h3>
-                            <button type="button" class="btn-adicionar" (click)="abrirModalFornecedor()">+ Adicionar
-                                Fornecedor</button>
-                        </div>
-                        <div class="grid-fornecedores">
-                            <div class="card-fornecedor" *ngFor="let f of fornecedores">
-                                <div class="forn-header">
-                                    <div>
-                                        <strong>{{ f.nome }}</strong>
-                                        <div class="forn-contato">Contato: {{ f.contato }}</div>
-                                    </div>
-                                    <div class="estrelas">
-                                        <span *ngFor="let s of stars(f.avaliacao)">⭐</span>
-                                    </div>
-                                </div>
-                                <div class="forn-info">📞 {{ f.telefone }}</div>
-                                <div class="forn-info">✉️ {{ f.email }}</div>
-                                <div class="forn-info">📍 {{ f.endereco }}</div>
-                                <div class="forn-obs" *ngIf="f.observacoes">{{ f.observacoes }}</div>
-                                <div class="forn-acoes">
-                                    <button type="button" class="btn-editar-forn" (click)="abrirModalFornecedor(f)">✏️
-                                        Editar</button>
-                                    <button type="button" class="btn-excluir-forn" (click)="excluirFornecedor(f.id)">🗑️
-                                        Remover</button>
-                                </div>
-                            </div>
-                            <div *ngIf="fornecedores.length === 0" class="vazio">
-                                <p>Nenhum fornecedor cadastrado</p>
-                            </div>
-                        </div>
+                <!-- FORNECEDORES -->
+                <div *ngIf="abaInventario === 'fornecedores'">
+                    <div class="estoque-header">
+                        <h3>Fornecedores</h3>
+                        <button type="button" class="btn-adicionar" (click)="abrirModalFornecedor()">+ Adicionar
+                            Fornecedor</button>
                     </div>
-
-                    <!-- COMPARAÇÃO DE PREÇOS -->
-                    <div *ngIf="abaInventario === 'precos'">
-                        <h3>Comparação de Preços entre Fornecedores</h3>
-                        <p class="inv-sub">Compare os preços dos mesmos itens oferecidos por diferentes fornecedores
-                            para
-                            tomar melhores decisões de compra.</p>
-                        <div *ngIf="comparacaoPrecos.length === 0" class="vazio">
-                            <p>Nenhum item com múltiplos fornecedores ainda</p>
-                            <span>Adicione pelo menos 2 fornecedores por item no estoque para comparar</span>
-                        </div>
-                        <div class="card-preco" *ngFor="let c of comparacaoPrecos">
-                            <div class="preco-item-nome">
-                                {{ $any(c).item.nome }}
-                                <span class="tag">{{ $any(c).item.categoria }}</span>
-                            </div>
-                            <div class="preco-item-estoque">Estoque atual: {{ $any(c).item.quantidade }}{{
-                                $any(c).item.unidade }}</div>
-                            <div class="preco-linha" *ngFor="let f of $any(c).fornecedores; let i = index"
-                                [class.melhor-preco]="i === 0">
+                    <div class="grid-fornecedores">
+                        <div class="card-fornecedor" *ngFor="let f of fornecedores">
+                            <div class="forn-header">
                                 <div>
-                                    <span>{{ f.nome }}</span>
-                                    <span class="badge-melhor" *ngIf="i === 0">Melhor Preço</span>
-                                    <div class="preco-data" *ngIf="f.atualizadoEm">Atualizado em {{ f.atualizadoEm }}
-                                    </div>
+                                    <strong>{{ f.nome }}</strong>
+                                    <div class="forn-contato">Contato: {{ f.contato }}</div>
                                 </div>
-                                <div class="preco-direita">
-                                    <span class="preco-valor">R$ {{ f.preco?.toFixed(2) }}</span>
-                                    <span class="preco-diff" *ngIf="i > 0">+R$ {{ (f.preco -
-                                        $any(c).fornecedores[0].preco).toFixed(2) }}</span>
+                                <div class="estrelas">
+                                    <span *ngFor="let s of stars(f.avaliacao)">⭐</span>
                                 </div>
                             </div>
-                            <div class="economia-linha">
-                                <strong>Economia potencial:</strong> Escolhendo o melhor preço, você pode economizar até
-                                <strong>R$ {{ $any(c).economia?.toFixed(2) }}</strong> por unidade ({{
-                                $any(c).percentual
-                                }}%)
+                            <div class="forn-info">📞 {{ f.telefone }}</div>
+                            <div class="forn-info">✉️ {{ f.email }}</div>
+                            <div class="forn-info">📍 {{ f.endereco }}</div>
+                            <div class="forn-obs" *ngIf="f.observacoes">{{ f.observacoes }}</div>
+                            <div class="forn-acoes">
+                                <button type="button" class="btn-editar-forn" (click)="abrirModalFornecedor(f)">✏️
+                                    Editar</button>
+                                <button type="button" class="btn-excluir-forn" (click)="excluirFornecedor(f.id)">🗑️
+                                    Remover</button>
                             </div>
+                        </div>
+                        <div *ngIf="fornecedores.length === 0" class="vazio">
+                            <p>Nenhum fornecedor cadastrado</p>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- MODAL ESTOQUE -->
-            <div class="modal-overlay" *ngIf="modalEstoque" (click)="modalEstoque = false">
-                <div class="modal" (click)="$event.stopPropagation()">
-                    <h2>{{ editandoEstoque ? 'Editar Item' : 'Adicionar Item ao Estoque' }}</h2>
-                    <p>Preencha as informações do item</p>
-                    <div class="campo">
-                        <label>Nome do Item *</label>
-                        <input type="text" placeholder="Ex: Tomate San Marzano" [(ngModel)]="novoItem.nome" />
+                <!-- COMPARAÇÃO DE PREÇOS -->
+                <div *ngIf="abaInventario === 'precos'">
+                    <h3>Comparação de Preços entre Fornecedores</h3>
+                    <p class="inv-sub">Compare os preços dos mesmos itens oferecidos por diferentes fornecedores para
+                        tomar melhores decisões de compra.</p>
+                    <div *ngIf="comparacaoPrecos.length === 0" class="vazio">
+                        <p>Nenhum item com múltiplos fornecedores ainda</p>
+                        <span>Adicione pelo menos 2 fornecedores por item no estoque para comparar</span>
                     </div>
-                    <div class="linha-dupla">
-                        <div class="campo">
-                            <label>Categoria *</label>
-                            <select [(ngModel)]="novoItem.categoria">
-                                <option *ngFor="let c of categorias">{{ c }}</option>
-                            </select>
+                    <div class="card-preco" *ngFor="let c of comparacaoPrecos">
+                        <div class="preco-item-nome">
+                            {{ $any(c).item.nome }}
+                            <span class="tag">{{ $any(c).item.categoria }}</span>
                         </div>
-                        <div class="campo">
-                            <label>Unidade *</label>
-                            <select [(ngModel)]="novoItem.unidade">
-                                <option *ngFor="let u of unidades">{{ u }}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="linha-dupla">
-                        <div class="campo">
-                            <label>Quantidade Atual *</label>
-                            <input type="number" [(ngModel)]="novoItem.quantidade" />
-                        </div>
-                        <div class="campo">
-                            <label>Quantidade Mínima *</label>
-                            <input type="number" [(ngModel)]="novoItem.minimo" />
-                        </div>
-                    </div>
-                    <div class="campo">
-                        <label>Data de Validade</label>
-                        <input type="date" [(ngModel)]="novoItem.validade" />
-                    </div>
-                    <div class="secao-fornecedores">
-                        <h4>Preços por Fornecedor</h4>
-                        <div class="lista-fornecedores-item" *ngIf="novoItem.fornecedores?.length > 0">
-                            <div class="fornecedor-item-linha" *ngFor="let f of novoItem.fornecedores; let i = index">
+                        <div class="preco-item-estoque">Estoque atual: {{ $any(c).item.quantidade }}{{
+                            $any(c).item.unidade }}</div>
+                        <div class="preco-linha" *ngFor="let f of $any(c).fornecedores; let i = index"
+                            [class.melhor-preco]="i === 0">
+                            <div>
                                 <span>{{ f.nome }}</span>
-                                <span>R$ {{ f.preco?.toFixed(2) }}</span>
-                                <span class="forn-data">{{ f.atualizadoEm }}</span>
-                                <button type="button" class="btn-remover-forn"
-                                    (click)="removerFornecedorDoItem(i)">✕</button>
+                                <span class="badge-melhor" *ngIf="i === 0">Melhor Preço</span>
+                                <div class="preco-data" *ngIf="f.atualizadoEm">Atualizado em {{ f.atualizadoEm }}</div>
+                            </div>
+                            <div class="preco-direita">
+                                <span class="preco-valor">R$ {{ f.preco?.toFixed(2) }}</span>
+                                <span class="preco-diff" *ngIf="i > 0">+R$ {{ (f.preco -
+                                    $any(c).fornecedores[0].preco).toFixed(2) }}</span>
                             </div>
                         </div>
-                        <div class="adicionar-fornecedor-linha">
-                            <select [(ngModel)]="novoFornecedorItem.nome" class="select-forn">
-                                <option value="">Selecionar fornecedor</option>
-                                <option *ngFor="let f of fornecedores" [value]="f.nome">{{ f.nome }}</option>
-                            </select>
-                            <input type="number" placeholder="Preço" [(ngModel)]="novoFornecedorItem.preco"
-                                class="input-preco" />
-                            <input type="date" [(ngModel)]="novoFornecedorItem.atualizadoEm" class="input-data" />
-                            <button type="button" class="btn-add-forn"
-                                (click)="adicionarFornecedorAoItem()">Adicionar</button>
+                        <div class="economia-linha">
+                            <strong>Economia potencial:</strong> Escolhendo o melhor preço, você pode economizar até
+                            <strong>R$ {{ $any(c).economia?.toFixed(2) }}</strong> por unidade ({{ $any(c).percentual
+                            }}%)
                         </div>
-                    </div>
-                    <div class="modal-acoes">
-                        <button type="button" class="btn-verde" (click)="salvarEstoque()">{{ editandoEstoque ? 'Salvar'
-                            :
-                            'Adicionar Item' }}</button>
-                        <button type="button" class="btn-cancelar" (click)="modalEstoque = false">Cancelar</button>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- MODAL FORNECEDOR -->
-            <div class="modal-overlay" *ngIf="modalFornecedor" (click)="modalFornecedor = false">
-                <div class="modal" (click)="$event.stopPropagation()">
-                    <h2>{{ editandoFornecedor ? 'Editar Fornecedor' : 'Adicionar Fornecedor' }}</h2>
-                    <p>Cadastre um novo fornecedor no sistema</p>
+        <!-- MODAL ESTOQUE -->
+        <div class="modal-overlay" *ngIf="modalEstoque" (click)="modalEstoque = false">
+            <div class="modal" (click)="$event.stopPropagation()">
+                <h2>{{ editandoEstoque ? 'Editar Item' : 'Adicionar Item ao Estoque' }}</h2>
+                <p>Preencha as informações do item</p>
+                <div class="campo">
+                    <label>Nome do Item *</label>
+                    <input type="text" placeholder="Ex: Tomate San Marzano" [(ngModel)]="novoItem.nome" />
+                </div>
+                <div class="linha-dupla">
                     <div class="campo">
-                        <label>Nome do Fornecedor *</label>
-                        <input type="text" placeholder="Ex: Importadora Italiana" [(ngModel)]="novoFornecedor.nome" />
-                    </div>
-                    <div class="linha-dupla">
-                        <div class="campo">
-                            <label>Nome do Contato</label>
-                            <input type="text" placeholder="Ex: Marco Rossi" [(ngModel)]="novoFornecedor.contato" />
-                        </div>
-                        <div class="campo">
-                            <label>Telefone</label>
-                            <input type="tel" placeholder="(11) 3456-7890" [(ngModel)]="novoFornecedor.telefone" />
-                        </div>
-                    </div>
-                    <div class="campo">
-                        <label>E-mail</label>
-                        <input type="email" placeholder="contato@fornecedor.com.br"
-                            [(ngModel)]="novoFornecedor.email" />
-                    </div>
-                    <div class="campo">
-                        <label>Endereço</label>
-                        <input type="text" placeholder="Rua, número - Cidade, Estado"
-                            [(ngModel)]="novoFornecedor.endereco" />
-                    </div>
-                    <div class="campo">
-                        <label>Avaliação</label>
-                        <select [(ngModel)]="novoFornecedor.avaliacao">
-                            <option [value]="1">1 Estrela</option>
-                            <option [value]="2">2 Estrelas</option>
-                            <option [value]="3">3 Estrelas</option>
-                            <option [value]="4">4 Estrelas</option>
-                            <option [value]="5">5 Estrelas</option>
+                        <label>Categoria *</label>
+                        <select [(ngModel)]="novoItem.categoria">
+                            <option *ngFor="let c of categorias">{{ c }}</option>
                         </select>
                     </div>
                     <div class="campo">
-                        <label>Observações</label>
-                        <input type="text" placeholder="Informações adicionais..."
-                            [(ngModel)]="novoFornecedor.observacoes" />
+                        <label>Unidade *</label>
+                        <select [(ngModel)]="novoItem.unidade">
+                            <option *ngFor="let u of unidades">{{ u }}</option>
+                        </select>
                     </div>
-                    <div class="modal-acoes">
-                        <button type="button" class="btn-vermelho" (click)="salvarFornecedor()">{{ editandoFornecedor ?
-                            'Salvar' : 'Adicionar Fornecedor' }}</button>
-                        <button type="button" class="btn-cancelar" (click)="modalFornecedor = false">Cancelar</button>
+                </div>
+                <div class="linha-dupla">
+                    <div class="campo">
+                        <label>Quantidade Atual *</label>
+                        <input type="number" [(ngModel)]="novoItem.quantidade" />
                     </div>
+                    <div class="campo">
+                        <label>Quantidade Mínima *</label>
+                        <input type="number" [(ngModel)]="novoItem.minimo" />
+                    </div>
+                </div>
+                <div class="campo">
+                    <label>Data de Validade</label>
+                    <input type="date" [(ngModel)]="novoItem.validade" />
+                </div>
+                <div class="secao-fornecedores">
+                    <h4>Preços por Fornecedor</h4>
+                    <div class="lista-fornecedores-item" *ngIf="novoItem.fornecedores?.length > 0">
+                        <div class="fornecedor-item-linha" *ngFor="let f of novoItem.fornecedores; let i = index">
+                            <span>{{ f.nome }}</span>
+                            <span>R$ {{ f.preco?.toFixed(2) }}</span>
+                            <span class="forn-data">{{ f.atualizadoEm }}</span>
+                            <button type="button" class="btn-remover-forn"
+                                (click)="removerFornecedorDoItem(i)">✕</button>
+                        </div>
+                    </div>
+                    <div class="adicionar-fornecedor-linha">
+                        <select [(ngModel)]="novoFornecedorItem.nome" class="select-forn">
+                            <option value="">Selecionar fornecedor</option>
+                            <option *ngFor="let f of fornecedores" [value]="f.nome">{{ f.nome }}</option>
+                        </select>
+                        <input type="number" placeholder="Preço" [(ngModel)]="novoFornecedorItem.preco"
+                            class="input-preco" />
+                        <input type="date" [(ngModel)]="novoFornecedorItem.atualizadoEm" class="input-data" />
+                        <button type="button" class="btn-add-forn"
+                            (click)="adicionarFornecedorAoItem()">Adicionar</button>
+                    </div>
+                </div>
+                <div class="modal-acoes">
+                    <button type="button" class="btn-verde" (click)="salvarEstoque()">{{ editandoEstoque ? 'Salvar' :
+                        'Adicionar Item' }}</button>
+                    <button type="button" class="btn-cancelar" (click)="modalEstoque = false">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL FORNECEDOR -->
+        <div class="modal-overlay" *ngIf="modalFornecedor" (click)="modalFornecedor = false">
+            <div class="modal" (click)="$event.stopPropagation()">
+                <h2>{{ editandoFornecedor ? 'Editar Fornecedor' : 'Adicionar Fornecedor' }}</h2>
+                <p>Cadastre um novo fornecedor no sistema</p>
+                <div class="campo">
+                    <label>Nome do Fornecedor *</label>
+                    <input type="text" placeholder="Ex: Importadora Italiana" [(ngModel)]="novoFornecedor.nome" />
+                </div>
+                <div class="linha-dupla">
+                    <div class="campo">
+                        <label>Nome do Contato</label>
+                        <input type="text" placeholder="Ex: Marco Rossi" [(ngModel)]="novoFornecedor.contato" />
+                    </div>
+                    <div class="campo">
+                        <label>Telefone</label>
+                        <input type="tel" placeholder="(11) 3456-7890" [(ngModel)]="novoFornecedor.telefone" />
+                    </div>
+                </div>
+                <div class="campo">
+                    <label>E-mail</label>
+                    <input type="email" placeholder="contato@fornecedor.com.br" [(ngModel)]="novoFornecedor.email" />
+                </div>
+                <div class="campo">
+                    <label>Endereço</label>
+                    <input type="text" placeholder="Rua, número - Cidade, Estado"
+                        [(ngModel)]="novoFornecedor.endereco" />
+                </div>
+                <div class="campo">
+                    <label>Avaliação</label>
+                    <select [(ngModel)]="novoFornecedor.avaliacao">
+                        <option [value]="1">1 Estrela</option>
+                        <option [value]="2">2 Estrelas</option>
+                        <option [value]="3">3 Estrelas</option>
+                        <option [value]="4">4 Estrelas</option>
+                        <option [value]="5">5 Estrelas</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label>Observações</label>
+                    <input type="text" placeholder="Informações adicionais..."
+                        [(ngModel)]="novoFornecedor.observacoes" />
+                </div>
+                <div class="modal-acoes">
+                    <button type="button" class="btn-vermelho" (click)="salvarFornecedor()">{{ editandoFornecedor ?
+                        'Salvar' : 'Adicionar Fornecedor' }}</button>
+                    <button type="button" class="btn-cancelar" (click)="modalFornecedor = false">Cancelar</button>
+                </div>
+            </div>
+        </div>
